@@ -1,42 +1,71 @@
 package com.test;
 
 import java.util.*;
-public class Main {
 
+public class Main {
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
         Scanner sc = new Scanner(System.in);
-        int num = sc.nextInt();
-            if(num==0){
-                System.out.println("none");
-                return;
+        while (sc.hasNext()) {
+            int n = sc.nextInt();
+            int m = sc.nextInt();
+            int max = 0;
+            int[] weight = new int[n + 1];
+            HashSet<Integer> leftSet = new HashSet<>();
+            for (int i = 1; i <= n; i++) {
+                weight[i] = sc.nextInt();
+                max += weight[i];
+                leftSet.add(i);
             }
-        String s1 = sc.next();
-        boolean isLength=true;
-        boolean isDic=true;
-        for(int i=0;i<num-1;i++){
-            String s2 = sc.next();
-            if(s1.charAt(0)==s2.charAt(0)&&s1!=null&&s2!=null){
-                s1=s1.substring(1);
-                s2=s2.substring(1);
+            HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+            for (int i = 0; i < n - 1; i++) {
+                int a = sc.nextInt();
+                int b = sc.nextInt();
+                AddToMap(map, a, b);
+                AddToMap(map, b, a);
             }
-            if(s1.charAt(0)>s2.charAt(0)){
-                isDic=false;
+            HashSet<Integer> resultSet = new HashSet<>();
+            HashSet<Integer> nearBySet = new HashSet<>();
+            int currentWeight = 0;
+            for (int i = 0; i < m && currentWeight < max; i++) {
+                int num = -1;
+                int wei = 0;
+                for (Integer room : leftSet) {
+                    int temp = 0;
+                    if (!resultSet.contains(room)&&(!nearBySet.contains(room))) {
+                        temp += weight[room];
+                    }
+                    for (Integer nearBy : map.get(room)) {
+                        if (!nearBySet.contains(nearBy)&&(!resultSet.contains(nearBy))) {
+                            temp += weight[nearBy];
+                        }
+                    }
+                    if (temp > wei) {
+                        wei = temp;
+                        num = room;
+                    }
+                }
+                resultSet.add(num);
+                nearBySet.addAll(map.get(num));
+                leftSet.remove(num);
+                currentWeight += wei;
             }
-            if(s1.length()>s2.length()){
-                isLength=false;
+            for (Integer integer : resultSet) {
+                System.out.println(integer);
             }
-            s1=s2;
-        }
-        if(isLength&&isDic){
-            System.out.println("both");
-        }else if(isLength){
-            System.out.println("lengths");
-        }else if(isDic){
-            System.out.println("lexicographically");
-        }else{
-            System.out.println("none");
+            System.out.println(currentWeight);
         }
         sc.close();
     }
+
+    public static void AddToMap(HashMap<Integer, ArrayList<Integer>> map, int a, int b) {
+        if (!map.containsKey(a)) {
+            ArrayList<Integer> temp = new ArrayList<>();
+            temp.add(b);
+            map.put(a, temp);
+        }
+        if (map.containsKey(a) && (!map.get(a).contains(b))) {
+            map.get(a).add(b);
+        }
+    }
+
 }

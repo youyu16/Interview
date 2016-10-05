@@ -10,12 +10,14 @@ public class LeetCode401 {
     public class Solution {
         public List<String> readBinaryWatch(int num) {
             List<String> result = new ArrayList<>();
-            if(num>8){
-                return result;
+            for (int i = 0; i < 12; i++) {
+                for (int j = 0; j < 60; j++) {
+                    if (Integer.bitCount(i) + Integer.bitCount(j) == num) {
+                        result.add(String.format("%d:%02d", i, j));
+                    }
+                }
             }
-            int hour = 0;
-            int miniute = num;
-            
+            return result;
         }
     }
 }
