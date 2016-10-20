@@ -11,7 +11,7 @@ public class LintCode79 {
 
     public static void main(String[] args) {
         LintCode79 test = new LintCode79();
-        //test.longestCommonSubstring("abccccccccccde", "dbccccccabccde");
+        //Composition.longestCommonSubstring("abccccccccccde", "dbccccccabccde");
         test.getLCString("www.lintcode.com code", "www.ninechapter.com code");
     }
 

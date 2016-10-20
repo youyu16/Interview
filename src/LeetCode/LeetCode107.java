@@ -1,19 +1,11 @@
 package LeetCode;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Created by t-tiyou on 9/14/2016.
  */
 public class LeetCode107 {
-
-    public static void main(String[] args) {
-
-    }
-
 
     public class TreeNode {
         int val;
@@ -27,30 +19,35 @@ public class LeetCode107 {
 
     public class Solution {
         public List<List<Integer>> levelOrderBottom(TreeNode root) {
+            Queue<TreeNode> s1 = new LinkedList<>();
+            Queue<TreeNode> s2 = new LinkedList<>();
+            List<List<Integer>> res = new LinkedList<>();
+            if (root == null)
+                return res;
+            s1.add(root);
 
-            List<List<Integer>> result = new LinkedList<>();
-            LinkedList<TreeNode> currentStep = new LinkedList<>();
-            currentStep.add(root);
-
-            while (!currentStep.isEmpty()) {
-                it(currentStep, result);
+            while (!s1.isEmpty() || !s2.isEmpty()) {
+                if (s1.isEmpty()) {
+                    addToList(s2, s1, res);
+                } else if (s2.isEmpty()) {
+                    addToList(s1, s2, res);
+                }
             }
-            return result;
+            return res;
         }
 
-        public void it(LinkedList<TreeNode> currentStep, List<List<Integer>> result) {
-            LinkedList<TreeNode> nextStep = new LinkedList<>();
-            List<Integer> r = new ArrayList<>();
-            for (TreeNode node : currentStep) {
-                nextStep.add(node.left);
-                if (node.left != null)
-                    r.add(node.left.val);
-                nextStep.add(node.right);
-                if (node.right != null)
-                    r.add(node.right.val);
+        public void addToList(Queue<TreeNode> s1, Queue<TreeNode> s2, List<List<Integer>> res) {
+            List<Integer> tempList = new LinkedList<>();
+            while (!s1.isEmpty()) {
+                TreeNode t = s1.poll();
+                if (t.left != null)
+                    s2.add(t.left);
+                if (t.right != null)
+                    s2.add(t.right);
+                tempList.add(t.val);
             }
-            result.add(r);
-            currentStep = nextStep;
+            if (tempList.size() != 0)
+                res.add(0, tempList);
         }
     }
 }
